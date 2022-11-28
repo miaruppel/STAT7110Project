@@ -3,7 +3,7 @@
 # Mia Ruppel
 
 rm(list=ls())
-setwd('~/Documents/RScripts')
+setwd('~/Documents/GitHub/STAT7110Project')
 
 # load in data 
 bigdata <- read.table('fat.dat.txt')
