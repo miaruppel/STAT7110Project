@@ -62,6 +62,60 @@ cov(bigdata)
 #correlation of variables
 cor(bigdata)
 
+#  simple linear regression model 
+fit1 <- lm(`%BF_Brozek` ~ Adip_Index, data=bigdata)
+summary(fit1) # adj R^2 of 0.5281
+
+fitted(fit1)
+residuals(fit1)
+
+plot(bigdata$Adip_Index, bigdata$`%BF_Brozek`, 
+     xlab="Adipose Index (kg/m^2)", 
+     ylab="Body Fat Percentage (%)")
+abline(fit1) # fairly linear, no need for polynomials most likely 
+
+# multiple linear regression with interaction 
+fit2 <- lm(`%BF_Brozek` ~ Adip_Index + Weight + Adip_Index:Weight, data=bigdata)
+summary(fit2) # adj R^2 of 0.575 (not much better)
+
+# multiple linear regression
+fit3 <- lm(`%BF_Brozek` ~ Adip_Index + Weight + Abd_Circum + Chest_Circum, data=bigdata)
+summary(fit3) # adj R^2 of 0.7153 (pretty good!)
+
+par(mfrow=c(2,2))
+plot(fit3) # seems to fit assumptions of normality, linearity, and constant variance 
+
+# identifying  outliers (high difference between fitted and residual)
+library(car)
+library(leaps)
+outlierTest(fit3) # one outlier, subject 39 
+
+# identifying high leverage points (outliers with regards to other predictors)
+hat.plot <- function(fit, mydata) {
+  p <- length(coefficients(fit))
+  n <- length(fitted(fit))
+  plot(hatvalues(fit), main="Index Plot of Hat Values")
+  abline(h=c(2,3)*p/n, col="red", lty=2)
+  text(hatvalues(fit), labels=rownames(mydata), cex=0.9, font=2)
+  identify(1:n, hatvalues(fit), names(hatvalues(fit)))
+}
+par(mfrow=c(1,1))
+hat.plot(fit3, bigdata) # also shows subject 39 causing issues 
+
+# identifying influential observations (have a disproportionate impact on the value of the model)
+# Cook's distance
+( cutoff <- 4/(nrow(bigdata)-length(fit$coefficients)-2) )
+plot(fit, which=4, cook.levels=cutoff)
+abline(h=cutoff, lty=2, col="red") # showing subject 39 being abnormal as well
+
+# VERDICT: remove subject 39 from data 
+
+
+
+
+
+
+
 
 
 
