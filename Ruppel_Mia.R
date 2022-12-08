@@ -112,20 +112,20 @@ abline(h=cutoff, lty=2, col="red") # showing subject 39 being abnormal as well
 bigdata_final <- bigdata[!(row.names(bigdata) %in% "39"), ]
 
 # selecting the best fit model 
-fit4 <- lm(`%BF_Brozek` ~ Adip_Index + Weight + Abd_Circum + Chest_Circum + Fat_Free_Weight + 
+fit4 <- lm(`%BF_Brozek` ~ Adip_Index + Weight + Height + Abd_Circum + Chest_Circum + Fat_Free_Weight + 
              Neck_Circum + Hip_Circum + Thigh_Circum + Knee_Circum + Ankle_Circum + Age +
              Ext_Bicep_Circum + Forearm_Circum + Wrist_Circum, data=bigdata_final)
-summary(fit4) # adj R^2  of 0.9717
+summary(fit4) # adj R^2  of 0.9719
 
-leaps <-regsubsets(`%BF_Brozek` ~ Adip_Index + Weight + Abd_Circum + Chest_Circum + Fat_Free_Weight + 
+leaps <-regsubsets(`%BF_Brozek` ~ Adip_Index + Weight + Height + Abd_Circum + Chest_Circum + Fat_Free_Weight + 
                      Neck_Circum + Hip_Circum + Thigh_Circum + Knee_Circum + Ankle_Circum + Age +
                      Ext_Bicep_Circum + Forearm_Circum + Wrist_Circum, data=bigdata_final, nbest=14)
 plot(leaps, scale="adjr2") # shows with combination of predictive variables results in highest R^2
 title('All Subsets Regression')
 
-fit5 <- lm(`%BF_Brozek` ~ Adip_Index + Weight + Abd_Circum + Fat_Free_Weight + Chest_Circum +
+fit5 <- lm(`%BF_Brozek` ~ Adip_Index + Weight + Height + Abd_Circum + Fat_Free_Weight + Chest_Circum +
             Thigh_Circum + Ankle_Circum + Ext_Bicep_Circum + Forearm_Circum, data=bigdata_final)
-summary(fit5) # adj R^2 of 0.9718
+summary(fit5) # adj R^2 of 0.9719
 
 # accessing normality 
 qqPlot(fit5, simulate=TRUE, labels=row.names(bigdata_final),
